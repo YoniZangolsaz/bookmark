@@ -3,7 +3,7 @@ import {pageInterface} from '../interfaces/page.interface';
 // import { btnInterface } from '../interfaces/btn.interface';
 
 const addPage = async (page: pageInterface) => {
-  const newPage: pageInterface = await pageRepository.addPage(page);
+  const newPage: any = await pageRepository.addPage(page);
   return newPage;
 };
 

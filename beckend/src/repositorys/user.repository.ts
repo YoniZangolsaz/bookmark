@@ -3,7 +3,7 @@ import {
   userInterface,
   usernameInterface,
   userAggregateInterface,
-  usernamesAndRolesInterface,
+  // usernamesAndRolesInterface,
 } from '../interfaces/user.interface';
 
 const getUser = async (
@@ -76,12 +76,11 @@ const getAggragateUser = async (
   return user[0];
 };
 
-const addUser = async (newUser: userInterface, newPages: string[]) => {
+const addUser = async (newUser: userInterface) => {
   const user = {
     username: newUser.username,
     password: newUser.password,
-    role: newUser.role,
-    pages: newPages,
+    pages: newUser.pages,
   };
   const userNew = new userModel(user);
   await userNew.save();
@@ -92,11 +91,11 @@ const getAllusernames = async (): Promise<usernameInterface[]> => {
   return await userModel.find({}).select('username');
 };
 
-const getAllusernamesAndRoles = async (): Promise<
-  usernamesAndRolesInterface[]
-> => {
-  return await userModel.find({}).select('username role');
-};
+// const getAllusernamesAndRoles = async (): Promise<
+//   usernamesAndRolesInterface[]
+// > => {
+//   return await userModel.find({}).select('username role');
+// };
 
 const checkIfUserNameExist = async (username: string): Promise<boolean> => {
   const userExist = await userModel.exists({ username: username });
@@ -160,6 +159,6 @@ export default {
   checkIfUserNameExist,
   checkUserRole,
   checkUserExist,
-  getAllusernamesAndRoles,
+  // getAllusernamesAndRoles,
   changeUserName,
 };

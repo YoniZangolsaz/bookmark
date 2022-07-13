@@ -7,7 +7,7 @@ router.post('/new', userController.addUser);
 router.get('/', userController.getUserByName);
 router.get('/id/:id', userController.getUserById);
 router.get('/username', userController.getAllusernames);
-router.get('/usernameandroles', userController.getAllusernamesAndRoles);
+// router.get('/usernameandroles', userController.getAllusernamesAndRoles);
 router.get('/username/exist/:username', userController.checkIfUserNameExist);
 router.post('/checkuserrole', userController.checkUserRole);
 router.post('/checkuserexist', userController.checkUserExist);

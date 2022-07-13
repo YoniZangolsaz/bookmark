@@ -4,6 +4,7 @@ import { makeStyles } from '@mui/styles';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
+import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import Input from '../components/Input';
 import SubmitButton from '../components/Button';
@@ -36,35 +37,37 @@ const SignIn = () => {
   const [error, setError] = useState({ username: false, password: false });
   const [loading, setLoading] = useState('determinate');
 
-  useEffect(() => {
-    const localData = getObj('data');
-    if (!localData) {
-      return;
-    }
-    setLoading('indeterminate');
-    const userCheck = {
-      username: localData?.user.username,
-      password: localData?.user.password,
-    };
-    axios
-      .post(
-        `${process.env.REACT_APP_BECKEND_URL}/users/checkuserexist`,
-        userCheck
-      )
-      .then((res) => {
-        if (!res.data) {
-          clear();
-          setLoading('determinate');
-        } else {
-          const currentLocatin = location.pathname;
-          if (currentLocatin !== '/button') {
-            navigate(`/button`);
-          }
-          setLoading('determinate');
-        }
-      })
-      .catch((e) => {});
-  }, []);
+  // useEffect(() => {
+  //   const localData = getObj('data');
+  //   if (!localData) {
+  //     return;
+  //   }
+  //   setLoading('indeterminate');
+  //   const userCheck = {
+  //     username: localData?.user.username,
+  //     password: localData?.user.password,
+  //   };
+  //   axios
+  //     .post(
+  //       `${process.env.REACT_APP_BECKEND_URL}/users/checkuserexist`,
+  //       userCheck
+  //     )
+  //     .then((res) => {
+  //       if (!res.data) {
+  //         clear();
+  //         setLoading('determinate');
+  //       } else {
+  //         const currentLocatin = location.pathname;
+  //         if (currentLocatin !== '/button') {
+  //           navigate(`/button`);
+  //         }
+  //         setLoading('determinate');
+  //       }
+  //     })
+  //     .catch((e) => {
+  //       setLoading('determinate');
+  //     });
+  // }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -110,7 +113,7 @@ const SignIn = () => {
             sx={{ mb: 3, fontWeight: 'bold', textTransform: 'uppercase' }}
             variant='h4'
           >
-            traking
+            Bookmark
           </Typography>
           <Input
             label={'Username'}
@@ -136,6 +139,9 @@ const SignIn = () => {
           <SubmitButton margin={2} txt={'submit'} fullWidth={true} />
         </Box>
       </form>
+      <Link href="#" variant="body2">
+        {"Don't have an account? Sign Up"}
+      </Link>
     </Container>
   );
 };

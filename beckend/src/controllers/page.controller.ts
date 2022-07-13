@@ -7,7 +7,7 @@ const addPage = async (req: Request, res: Response) => {
     const titleQuery: string = req.body.title;
     const btnsQuery: string[] = req.body.btns;
 
-    const newPage: pageInterface = {
+    const newPage: any = {
       title: titleQuery,
       btns: btnsQuery,
     };

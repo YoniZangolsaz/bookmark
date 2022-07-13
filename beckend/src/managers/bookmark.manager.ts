@@ -2,7 +2,7 @@ import btnRepository from '../repositorys/btn.repository';
 import { btnTitleInterface, btnInterface } from '../interfaces/bookmark.interface';
 
 const addBtn = async (btn: btnInterface) => {
-  const newBtn: btnInterface = await btnRepository.addBtn(btn);
+  const newBtn: any = await btnRepository.addBtn(btn);
   return newBtn;
 };
 

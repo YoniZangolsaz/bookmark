@@ -3,9 +3,9 @@ import {
   userInterface,
   usernameInterface,
   userAggregateInterface,
-  usernamesAndRolesInterface,
+  // usernamesAndRolesInterface,
 } from '../interfaces/user.interface';
-import pageManager from '../managers/page.manager';
+// import pageManager from '../managers/page.manager';
 import config from '../config/config';
 
 const crypto = require('crypto');
@@ -33,13 +33,9 @@ const getUserById = async (userId: string) => {
   return user;
 };
 
-const addUser = async (user: userInterface, pages: any) => {
+const addUser = async (user: any) => {
   user.password = encrypt(user.password, secretKey, initializationVector);
-  const newPages: string[] = [];
-  for (let i = 0; i < pages.length; i++) {
-    newPages.push((await pageManager.addPage(pages[i]))._id as string);
-  }
-  const newUser = await userRepository.addUser(user, newPages);
+  const newUser = await userRepository.addUser(user);
   return newUser;
 };
 
@@ -49,11 +45,11 @@ const getAllusernames = async () => {
   return getAllusernames;
 };
 
-const getAllusernamesAndRoles = async () => {
-  const getAllusernamesAndRoles: usernamesAndRolesInterface[] =
-    await userRepository.getAllusernamesAndRoles();
-  return getAllusernamesAndRoles;
-};
+// const getAllusernamesAndRoles = async () => {
+//   const getAllusernamesAndRoles: usernamesAndRolesInterface[] =
+//     await userRepository.getAllusernamesAndRoles();
+//   return getAllusernamesAndRoles;
+// };
 
 const checkIfUserNameExist = async (userName: string) => {
   const user: boolean = await userRepository.checkIfUserNameExist(userName);
@@ -86,6 +82,6 @@ export default {
   checkIfUserNameExist,
   checkUserRole,
   checkUserExist,
-  getAllusernamesAndRoles,
+  // getAllusernamesAndRoles,
   changeUserName,
 };

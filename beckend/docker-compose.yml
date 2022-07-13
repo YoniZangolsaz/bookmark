@@ -1,0 +1,17 @@
+version: '3.4'
+
+services:
+  mongo:
+    image: mongo
+    ports:
+      - 27017:27017
+
+  # beckend:
+  #   build: ./beckend/
+  #   env_file:
+  #     - .env.dev
+
+  # front:
+  #   build: ./front/
+  #   env_file:
+  #     - .env.dev

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import userManager from '../managers/user.manager';
-import { userAggregateInterface } from '../interfaces/user.interface';
+// import { userAggregateInterface } from '../interfaces/user.interface';
 
 // POST http://localhost:3020/login/
 const login = async (req: Request, res: Response) => {
@@ -8,7 +8,7 @@ const login = async (req: Request, res: Response) => {
   const password: string = req.body.password;
 
   try {
-    const user: userAggregateInterface = await userManager.getUser(username, password);
+    const user: any = await userManager.getUser(username, password);
     if (user) {
       return res.send({ user, data:user.pages });
     }

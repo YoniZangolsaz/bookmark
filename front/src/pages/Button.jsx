@@ -6,7 +6,6 @@ import { getObj } from '../utils/localStorage';
 import Pages from '../components/Pages';
 import NavBar from '../components/NavBar';
 import { InfoContext } from '../InfoContext';
-import Logo from '../components/Logo';
 import TooltipInfo from '../components/TooltipInfo';
 import axios from 'axios';
 import Loading from '../components/Loading';
@@ -61,7 +60,6 @@ const Button = () => {
       <Container>
         <Pages />
       </Container>
-      <Logo />
     </>
   );
 };

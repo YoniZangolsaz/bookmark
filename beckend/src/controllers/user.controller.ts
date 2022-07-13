@@ -4,7 +4,7 @@ import {
   userInterface,
   usernameInterface,
   userAggregateInterface,
-  usernamesAndRolesInterface,
+  // usernamesAndRolesInterface,
 } from '../interfaces/user.interface';
 
 // GET http://localhost:3020/users/
@@ -35,17 +35,16 @@ const getUserById = async (req: Request, res: Response) => {
 
 const addUser = async (req: Request, res: Response) => {
   try {
-    const nameQuery: string = req.body.user.username;
-    const passwordQuery: string = req.body.user.password;
-    const roleQuery: string = req.body.user.role;
-    const pages: object[] = req.body.pages;
+    const nameQuery: string = req.body.username;
+    const passwordQuery: string = req.body.password;
+    const pagesQuery: string[] = req.body.pages
 
     const newUser: userInterface = {
       username: nameQuery,
       password: passwordQuery,
-      role: roleQuery,
+      pages: pagesQuery
     };
-    const answer = await userManager.addUser(newUser, pages);
+    const answer = await userManager.addUser(newUser);
     res.send(answer);
   } catch (err: any) {
     res.status(500).json({ message: err.message });
@@ -61,15 +60,15 @@ const getAllusernames = async (_req: Request, res: Response) => {
   }
 };
 
-const getAllusernamesAndRoles = async (_req: Request, res: Response) => {
-  try {
-    const usernamesAndRoles: usernamesAndRolesInterface[] =
-      await userManager.getAllusernamesAndRoles();
-    res.send(usernamesAndRoles);
-  } catch (err: any) {
-    res.status(err?.response?.status || 500).json({ message: err.message });
-  }
-};
+// const getAllusernamesAndRoles = async (_req: Request, res: Response) => {
+//   try {
+//     const usernamesAndRoles: usernamesAndRolesInterface[] =
+//       await userManager.getAllusernamesAndRoles();
+//     res.send(usernamesAndRoles);
+//   } catch (err: any) {
+//     res.status(err?.response?.status || 500).json({ message: err.message });
+//   }
+// };
 
 const checkIfUserNameExist = async (req: Request, res: Response) => {
   try {
@@ -129,7 +128,7 @@ export default {
   getUserById,
   addUser,
   getAllusernames,
-  getAllusernamesAndRoles,
+  // getAllusernamesAndRoles,
   checkIfUserNameExist,
   checkUserRole,
   checkUserExist,
