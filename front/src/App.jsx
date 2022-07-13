@@ -11,7 +11,7 @@ import { InfoProvider } from './InfoContext';
 import Action from './pages/Action';
 import Create from './pages/CreateUser';
 import EditUser from './pages/EditUser';
-import EditPgaes from './pages/EditPgaes';
+// import EditPgaes from './pages/EditPgaes';
 let theme = createTheme({
   typography: {
     fontFamily: 'Rubik, sans-serif'
@@ -31,7 +31,7 @@ function App() {
             <Route path='/action' element={<Action />} />
             <Route path='/create' element={<Create />} />
             <Route path='/edit' element={<EditUser />} />
-            <Route path='/editpage' element={<EditPgaes />} />
+            {/* <Route path='/editpage' element={<EditPgaes />} /> */}
             <Route path="*" element={<Button />} />
           </Routes>
         </BrowserRouter>

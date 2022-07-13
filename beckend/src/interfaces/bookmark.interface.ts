@@ -1,15 +1,11 @@
-interface btnInterface {
-  title: String;
-  params: Object;
-  name: String;
-  select?: String;
-  message?: String;
-  type?: String;
-  methods: String;
+interface bookmarkInterface {
+  title: string;
+  url: string;
+  tags?: string[];
 }
 
-interface btnTitleInterface {
-  title: String;
+interface bookmarkTitleInterface {
+  title: string;
 }
 
-export { btnInterface, btnTitleInterface };
+export { bookmarkInterface, bookmarkTitleInterface };

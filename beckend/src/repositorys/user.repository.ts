@@ -2,7 +2,6 @@ import userModel from '../mongo/userModel';
 import {
   userInterface,
   usernameInterface,
-  userAggregateInterface,
   // usernamesAndRolesInterface,
 } from '../interfaces/user.interface';
 
@@ -17,70 +16,21 @@ const getUserById = async (userId: string): Promise<userInterface> => {
   return await userModel.findById(userId).lean();
 };
 
-const getAggragateUser = async (
-  username: string,
-  password: string
-): Promise<userAggregateInterface> => {
-  const user = await userModel.aggregate([
-    {
-      $match: { username, password },
+const getAggragateUser = async (username: string, password: string) => {
+  const populatedUser = await userModel.find({ username, password }).populate({
+    path: 'pages',
+    populate: {
+      path: 'bookmarks',
     },
-    {
-      $lookup: {
-        from: 'pages',
-        localField: 'pages',
-        foreignField: '_id',
-        as: 'pages',
-      },
-    },
-    {
-      $unwind: {
-        path: '$pages',
-      },
-    },
-    {
-      $lookup: {
-        from: 'btns',
-        localField: 'pages.btns',
-        foreignField: '_id',
-        as: 'pages.btns',
-      },
-    },
-    {
-      $group: {
-        _id: {
-          _id: '$_id',
-          username: '$username',
-          password: '$password',
-          role: '$role',
-        },
-        pages: {
-          $push: {
-            btns: '$pages.btns',
-            title: '$pages.title',
-          },
-        },
-      },
-    },
-    {
-      $project: {
-        _id: '$_id._id',
-        username: '$_id.username',
-        password: '$_id.password',
-        role: '$_id.role',
-        pages: '$pages',
-      },
-    },
-  ]);
-
-  return user[0];
+  });
+  return populatedUser[0];
 };
 
 const addUser = async (newUser: userInterface) => {
   const user = {
     username: newUser.username,
     password: newUser.password,
-    pages: newUser.pages,
+    pages: [],
   };
   const userNew = new userModel(user);
   await userNew.save();
@@ -137,13 +87,16 @@ const checkUserExist = async (
 const changeUserName = async (
   oldUserName: string,
   newUserName: string
-  
 ): Promise<boolean> => {
   const changeUsername = await userModel.findOneAndUpdate(
     { username: oldUserName },
     { username: newUserName }
   );
-  if (changeUsername && oldUserName !== newUserName && newUserName !== undefined) {
+  if (
+    changeUsername &&
+    oldUserName !== newUserName &&
+    newUserName !== undefined
+  ) {
     return true;
   } else {
     return false;

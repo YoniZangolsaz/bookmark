@@ -1,81 +1,105 @@
-import React, { useContext } from 'react';
-import { Box, Paper, Typography, Grid, Tooltip } from '@mui/material';
+import React, { useContext, useState } from 'react';
+import { Box, Paper, Typography, Grid, Button } from '@mui/material';
 import { InfoContext } from '../InfoContext';
-import SubmitButton from './Button';
 import { useNavigate } from 'react-router-dom';
 import { makeStyles } from '@mui/styles';
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const useStyles = makeStyles({
   box: {
     display: 'flex',
     flexWrap: 'wrap',
     margin: '0 auto',
-    justifyContent: 'center',
+    // justifyContent: 'center',
     marginBottom: '16px',
     minWidth: '100%',
   },
   paper: {
-    minHeight: '58vh',
-    maxHeight: '58vh',
+    minHeight: '17vh',
+    maxHeight: '17vh',
     margin: '16px',
     borderRadius: '20px',
     alignItems: 'center',
     overflow: 'auto',
+    width: '300px',
   },
   typographyHeader: {
     textAlign: 'center',
-    margin: '12px',
+    margin: '0 auto',
+
+    // margin: '12px',
     fontWeight: 'bold',
     textTransform: 'capitalize',
     fontFamily: 'Roboto Mono, monospace',
+    width: 'fit-content',
   },
   pages: {
     display: 'flex',
-    justifyContent: 'center',
     flexWrap: 'wrap',
+    flexDirection: 'column',
+    margin: '10px 20px',
+  },
+  button: {
+    width: '100%',
+    height: '0px',
+    margin: '5px 0',
+    padding: '15px 0',
+    letterSpacing: '2px',
+    backgroundColor: '#757575',
+    color: '#FFFFFF',
+    textTransform: 'capitalize',
+    '&:hover': { backgroundColor: '#757575', opacity: 0.8 },
   },
 });
 
 const Pages = () => {
   const classes = useStyles();
   let navigate = useNavigate();
+  const [pages, setPages] = useState([]);
   const { info, changeBtn } = useContext(InfoContext);
+
+  const deletePage = (pageNumber) => {
+    const newPages = [...pages];
+    setPages(pages.filter((page, i) => pageNumber !== i));
+  };
 
   return (
     <Grid container>
       <Box className={classes.box}>
         {info.map((obj, pageIndex) => (
-          <Grid key={pageIndex} item xs={10} sm={6} md={4} lg={4}>
+          <Grid key={pageIndex}>
             <Paper elevation={10} variant='elevation' className={classes.paper}>
-              <Typography
-                variant='h4'
-                className={classes.typographyHeader}
-                sx={{ color: 'secondary.light' }}
+              <Box
+                className='boxTitle'
+                sx={{ mt: 0.5, position: 'relative', width: '100%', }}
               >
-                {obj.title}
-              </Typography>
+                <IconButton
+                  sx={{ position: 'absolute', mt: 0 }}
+                  onClick={() => deletePage(pageIndex)}
+                  className='trashed'
+                >
+                  <DeleteIcon color={'error'} />
+                </IconButton>
+                <Typography
+                  variant='h4'
+                  className={classes.typographyHeader}
+                  sx={{ color: 'secondary.light' }}
+                >
+                  {obj.title}
+                </Typography>
+              </Box>
               <Box className={classes.pages}>
-                {obj.btns.map((btn, i) => (
-                  <Tooltip key={i} placement='top-start' title={btn.toolTip} arrow>
-                    <div>
-                      <SubmitButton
-                        key={i}
-                        onClick={() => {
-                          changeBtn(pageIndex, i);
-                          navigate(
-                            `/action?pageTitle=${info[pageIndex].title}&btnTitle=${info[pageIndex].btns[i].title}`
-                          );
-                        }}
-                        fullWidth={false}
-                        txt={btn?.title}
-                        margin={'12px'}
-                        padding={'6px'}
-                        width={'140px'}
-                        height={'75px'}
-                        // marginTop={'5px'}
-                      />
-                    </div>
-                  </Tooltip>
+                {obj.bookmarks.map((bookmarks, i) => (
+                  <div>
+                    <Button
+                      key={i}
+                      href={bookmarks.url}
+                      className={classes.button}
+                    >
+                      {bookmarks?.title}
+                    </Button>
+                  </div>
                 ))}
               </Box>
             </Paper>

@@ -5,8 +5,8 @@ import config from '../config/config';
 const bookmarkSchema = new mongoose.Schema(
   {
     title: { type: String, required: true, unique: true },
-    url: { type: Object, required: true },
-    tags: { type: [String], required: true}
+    url: { type: String, required: true },
+    tags: { type: [String] }
   },
   {
     versionKey: false,

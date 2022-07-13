@@ -1,7 +1,7 @@
 import express, { Request, Response, Application } from 'express';
 import loginRouter from './routers/login.router';
 import usersRouter from './routers/users.router';
-import btnRouter from './routers/btn.router';
+import bookmarkRouter from './routers/bookmark.router';
 import pageRouter from './routers/page.router';
 
 import morgan from 'morgan';
@@ -14,7 +14,7 @@ function routers(app: Application) {
 
   app.use('/login', loginRouter);
   app.use('/users', usersRouter);
-  app.use('/buttons', btnRouter);
+  app.use('/bookmark', bookmarkRouter);
   app.use('/page', pageRouter);
 
   // TODO: isAlive should probably check connection to mongo

@@ -17,7 +17,7 @@ interface usernamesAndRolesInterface {
 interface userAggregateInterface {
   username: string;
   password: string;
-  pages: openPageInterface[];
+  pages?: unknown[] | undefined;
 }
 
 export {

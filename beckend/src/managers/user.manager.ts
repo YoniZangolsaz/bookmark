@@ -2,7 +2,6 @@ import userRepository from '../repositorys/user.repository';
 import {
   userInterface,
   usernameInterface,
-  userAggregateInterface,
   // usernamesAndRolesInterface,
 } from '../interfaces/user.interface';
 // import pageManager from '../managers/page.manager';
@@ -21,7 +20,7 @@ const initializationVector = Buffer.from(config.initializationVector); // some s
 const secretKey = Buffer.from(config.secretKey); // some string with lenth of 32
 
 const getUser = async (name: string, password: string) => {
-  const user: userAggregateInterface = await userRepository.getAggragateUser(
+  const user = await userRepository.getAggragateUser(
     name,
     encrypt(password, secretKey, initializationVector)
   );

@@ -1,12 +1,12 @@
-import { btnInterface } from './bookmark.interface';
+import { bookmarkInterface } from './bookmark.interface';
 interface pageInterface {
-  title: String;
+  title: string;
   bookmarks: string[];
   _id?: string;
 }
 interface openPageInterface {
   title: String;
-  bookmarks: btnInterface[];
+  bookmarks: bookmarkInterface[];
   _id?: string;
 }
 

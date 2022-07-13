@@ -6,9 +6,10 @@ import { getObj } from '../utils/localStorage';
 import Pages from '../components/Pages';
 import NavBar from '../components/NavBar';
 import { InfoContext } from '../InfoContext';
-import TooltipInfo from '../components/TooltipInfo';
 import axios from 'axios';
 import Loading from '../components/Loading';
+import AddPage from '../components/AddPage';
+
 
 const Button = () => {
   let navigate = useNavigate();
@@ -56,10 +57,8 @@ const Button = () => {
   ) : (
     <>
       <NavBar />
-      <TooltipInfo />
-      <Container>
-        <Pages />
-      </Container>
+      <Pages />
+      <AddPage />
     </>
   );
 };
