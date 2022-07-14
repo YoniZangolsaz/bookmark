@@ -16,8 +16,8 @@ const useStyles = makeStyles({
     minWidth: '100%',
   },
   paper: {
-    minHeight: '17vh',
-    maxHeight: '17vh',
+    minHeight: '20vh',
+    maxHeight: '20vh',
     margin: '16px',
     borderRadius: '20px',
     alignItems: 'center',
@@ -75,14 +75,14 @@ const Pages = () => {
                 sx={{ mt: 0.5, position: 'relative', width: '100%', }}
               >
                 <IconButton
-                  sx={{ position: 'absolute', mt: 0 }}
+                  sx={{ position: 'absolute' }}
                   onClick={() => deletePage(pageIndex)}
                   className='trashed'
                 >
                   <DeleteIcon color={'error'} />
                 </IconButton>
                 <Typography
-                  variant='h4'
+                  variant='h5'
                   className={classes.typographyHeader}
                   sx={{ color: 'secondary.light' }}
                 >

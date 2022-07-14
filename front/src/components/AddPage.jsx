@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { green } from '@mui/material/colors';
 import { makeStyles } from '@mui/styles';
+import Swal from 'sweetalert2';
 import {
   TextField,
   Dialog,
@@ -28,47 +29,32 @@ const useStyles = makeStyles({
 
 const AddPage = () => {
   const classes = useStyles();
-  const [open, setOpen] = useState(false);
+  const [pages, setPages] = useState([]);
 
-  const handleClose = () => {
-    setOpen(false);
-  };
 
-  const handleClick = () => {
-    setOpen(true);
+  const handleAddPage = async () => {
+    const { value: text } = await Swal.fire({
+      title: 'Enter the Title of the page',
+      input: 'text',
+      showCancelButton: true,
+      inputValidator: (text) => {
+        if (!text) {
+          return 'You need to write something!';
+        }
+      },
+    });
+    if (text) {
+      setPages([...pages, { title: text, bookmarks: [] }]);
+    }
   };
 
   return (
     <>
       <AddCircleOutlineIcon
         className={classes.addIcon}
-        onClick={handleClick}
+        onClick={handleAddPage}
         fontSize='large'
       />
-      <Dialog maxWidth = 'md' open ={open} onClose={handleClose}>
-        <DialogTitle>Add page</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            To subscribe to this website, please enter your email address here.
-            We will send updates occasionally.
-          </DialogContentText>
-          <Box>
-            <TextField
-              autoFocus
-              margin='dense'
-              id='name'
-              label='Email Address'
-              type='email'
-              fullWidth
-              variant='standard'
-            />
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleClose}>Add</Button>
-        </DialogActions>
-      </Dialog>
     </>
   );
 };
