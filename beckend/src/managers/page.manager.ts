@@ -1,37 +1,45 @@
 import pageRepository from '../repositorys/page.repository';
-import {pageInterface} from '../interfaces/page.interface';
+import { pageInterface } from '../interfaces/page.interface';
+import userRepository from '../repositorys/user.repository';
 // import { btnInterface } from '../interfaces/btn.interface';
 
-const addPage = async (page: pageInterface) => {
+const addPage = async (page: pageInterface, userName: string) => {
   const newPage: any = await pageRepository.addPage(page);
+  const user = await userRepository.addPage(userName, newPage._id);
+  user;
   return newPage;
 };
 
 const getAllPages = async () => {
-  const getAllPages: pageInterface[] = await pageRepository.getAllPages();
-  return getAllPages;
+  const pages: pageInterface[] = await pageRepository.getAllPages();
+  return pages;
 };
 
 const getPageById = async (pageId: string) => {
-    const getPageById: pageInterface = await pageRepository.getPageById(pageId);
-    return getPageById;
-  };
+  const page: pageInterface = await pageRepository.getPageById(pageId);
+  return page;
+};
 
+const deletePage = async (pageId: string) => {
+  await userRepository.deletePage(pageId);
+  const page: pageInterface = await pageRepository.deletePage(pageId);
+  return page;
+};
 
 // const updateBtnsInPage = async (pageId: string, btnId: string) => {
 //     try {
 //       const page: pageInterface = await getPageById(pageId);
 //       const btn: btnInterface = await getBtnById(btnId);
 //       let msg: string = 'message';
-  
+
 //       if (trainer.classIDs.includes(classID)) {
 //         return 'class already in group';
 //       }
-  
+
 //       if (!classQuery) {
 //         return 'The class not exist';
 //       }
-  
+
 //       if ((await trainer.age) < 20 || trainer.age > 40) {
 //         return 'The age of trainer must be between 20 - 40';
 //       }
@@ -55,4 +63,4 @@ const getPageById = async (pageId: string) => {
 //     }
 //   };
 
-export default { addPage, getAllPages, getPageById };
+export default { addPage, getAllPages, getPageById, deletePage };

@@ -102,6 +102,21 @@ const checkUserExist = async (req: Request, res: Response) => {
   }
 };
 
+const userData = async (req: Request, res: Response) => {
+  try {
+    const userName: string = req.body.username;
+    const password: string = req.body.password;
+
+    const answer = await userManager.userData(
+      userName,
+      password
+    );
+    res.send(answer);
+  } catch (err: any) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
 const changeUserName = async (req: Request, res: Response) => {
   try {
     const oldUserName: string = req.params.oldusername;
@@ -126,5 +141,6 @@ export default {
   checkIfUserNameExist,
   checkUserRole,
   checkUserExist,
+  userData,
   changeUserName,
 };

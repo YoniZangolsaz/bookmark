@@ -10,7 +10,7 @@ import axios from 'axios';
 
 const NavBar = () => {
   let navigate = useNavigate();
-  const getusername = getObj('data')?.user?.username;
+  const username = getObj('data')?.user?.username;
   const [userRole, setUserRole] = useState(false);
 
   const handleSignOutButton = () => {
@@ -55,7 +55,7 @@ const NavBar = () => {
           textTransform='capitalize'
         >
           <Link href='/button' underline='none'>
-            hello {getusername}
+            hello {username}
           </Link>
         </Typography>
         {userRole === true && (

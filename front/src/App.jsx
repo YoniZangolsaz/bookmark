@@ -14,7 +14,7 @@ import EditUser from './pages/EditUser';
 // import EditPgaes from './pages/EditPgaes';
 let theme = createTheme({
   typography: {
-    fontFamily: 'Rubik, sans-serif'
+    fontFamily: 'Rubik, sans-serif',
   },
 });
 
@@ -22,9 +22,9 @@ theme = responsiveFontSizes(theme);
 
 function App() {
   return (
-    <InfoProvider>
-      <ThemeProvider theme={theme}>
-        <BrowserRouter>
+    <ThemeProvider theme={theme}>
+      <BrowserRouter>
+        <InfoProvider>
           <Routes>
             <Route path='/' element={<SignIn />} />
             <Route path='/button' element={<Button />} />
@@ -32,12 +32,14 @@ function App() {
             <Route path='/create' element={<Create />} />
             <Route path='/edit' element={<EditUser />} />
             {/* <Route path='/editpage' element={<EditPgaes />} /> */}
-            <Route path="*" element={<Button />} />
+            <Route path='*' element={<Button />} />
           </Routes>
-        </BrowserRouter>
-      </ThemeProvider>
-    </InfoProvider>
+        </InfoProvider>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }
 
 export default App;
+
+

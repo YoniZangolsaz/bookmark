@@ -26,6 +26,10 @@ const getUser = async (name: string, password: string) => {
   );
   return user;
 };
+const userData = async (name: string, password: string) => {
+  const user = await userRepository.getAggragateUser(name, password);
+  return user.pages;
+};
 
 const getUserById = async (userId: string) => {
   const user: userInterface = await userRepository.getUserById(userId);
@@ -73,6 +77,11 @@ const changeUserName = async (oldUserName: string, newUserName: string) => {
   return username;
 };
 
+const addPage = async (userName: string, pageId: string) => {
+  const user = await userRepository.addPage(userName, pageId);
+  return user;
+};
+
 export default {
   getUser,
   getUserById,
@@ -83,4 +92,6 @@ export default {
   checkUserExist,
   // getAllusernamesAndRoles,
   changeUserName,
+  userData,
+  addPage
 };

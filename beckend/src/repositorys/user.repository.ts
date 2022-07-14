@@ -16,6 +16,29 @@ const getUserById = async (userId: string): Promise<userInterface> => {
   return await userModel.findById(userId).lean();
 };
 
+const addPage = async (
+  username: string,
+  pageId: string
+): Promise<userInterface> => {
+  const user = await userModel
+    .findOneAndUpdate({ username }, { $push: { pages: pageId } }, { new: true })
+    .lean();
+
+  return user as any as userInterface;
+};
+
+const deletePage = async (pageId: string) => {
+  const user = await userModel
+    .findOneAndUpdate(
+      { pages: pageId },
+      { $pull: { pages: pageId } },
+      { new: true }
+    )
+    .lean();
+
+  return user;
+};
+
 const getAggragateUser = async (username: string, password: string) => {
   const populatedUser = await userModel.find({ username, password }).populate({
     path: 'pages',
@@ -114,4 +137,6 @@ export default {
   checkUserExist,
   // getAllusernamesAndRoles,
   changeUserName,
+  addPage,
+  deletePage,
 };

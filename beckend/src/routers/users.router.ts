@@ -11,6 +11,7 @@ router.get('/username', userController.getAllusernames);
 router.get('/username/exist/:username', userController.checkIfUserNameExist);
 router.post('/checkuserrole', userController.checkUserRole);
 router.post('/checkuserexist', userController.checkUserExist);
+router.post('/userData', userController.userData);
 router.patch('/changeusername/:oldusername', userController.changeUserName);
 
 export default router;

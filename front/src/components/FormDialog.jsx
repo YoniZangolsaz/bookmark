@@ -1,51 +1,68 @@
 import React, { useState } from 'react';
-import Button from '@mui/material/Button';
+import {
+  Button,
+  IconButton,
+  Typography,
+  FormControl,
+  InputLabel,
+  OutlinedInput,
+  InputAdornment,
+} from '@mui/material';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-const FormDialog = () => {
-  const [open, setOpen] = useState(false);
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
+const FormDialog = ({ open, close, addBookmark }) => {
   return (
     <div>
-      <Button variant="outlined" onClick={handleClickOpen}>
-        Open form dialog
-      </Button>
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Subscribe</DialogTitle>
+      <Dialog open={open} onClose={close}>
+        <DialogTitle sx={{ textAlign: 'center' }}>
+          <Typography sx={{ color: '#26a69a' }} variant='h5'>
+            Add page
+          </Typography>
+        </DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            To subscribe to this website, please enter your email address here. We
-            will send updates occasionally.
-          </DialogContentText>
           <TextField
             autoFocus
-            margin="dense"
-            id="name"
-            label="Email Address"
-            type="email"
+            margin='dense'
+            label='Bookmark Title'
             fullWidth
-            variant="standard"
+            variant='outlined'
           />
+          <TextField
+            margin='dense'
+            label='Bookmark Url'
+            fullWidth
+            variant='outlined'
+          />
+          <FormControl fullWidth margin='dense' variant='outlined'>
+            <InputLabel>Add Tags</InputLabel>
+            <OutlinedInput
+              sx={{ padding: 0 }}
+              value={''}
+              onChange={''}
+              endAdornment={
+                <InputAdornment>
+                  <IconButton sx={{ color: 'green' }} onClick={''}>
+                    <AddCircleOutlineIcon />
+                  </IconButton>
+                </InputAdornment>
+              }
+              label='Add Tags'
+            />
+          </FormControl>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleClose}>Subscribe</Button>
+          <Button onClick={close}>Cancel</Button>
+          <Button onClick={close}>Add</Button>
         </DialogActions>
       </Dialog>
     </div>
   );
-}
+};
 
 export default FormDialog;

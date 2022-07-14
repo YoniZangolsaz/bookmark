@@ -27,10 +27,8 @@ const useStyles = makeStyles({
   },
 });
 
-const AddPage = () => {
+const AddPage = ({ click }) => {
   const classes = useStyles();
-  const [pages, setPages] = useState([]);
-
 
   const handleAddPage = async () => {
     const { value: text } = await Swal.fire({
@@ -44,10 +42,9 @@ const AddPage = () => {
       },
     });
     if (text) {
-      setPages([...pages, { title: text, bookmarks: [] }]);
+      click(text);
     }
   };
-
   return (
     <>
       <AddCircleOutlineIcon

@@ -1,64 +1,40 @@
 /* eslint-disable react/jsx-no-undef */
-import React, { useEffect, useState, useContext } from 'react';
-import Container from '@mui/material/Container';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { getObj } from '../utils/localStorage';
+import React, { useContext } from 'react';
 import Pages from '../components/Pages';
 import NavBar from '../components/NavBar';
 import { InfoContext } from '../InfoContext';
-import axios from 'axios';
 import Loading from '../components/Loading';
 import AddPage from '../components/AddPage';
-
+import axios from 'axios';
+import { getObj } from '../utils/localStorage';
 
 const Button = () => {
-  let navigate = useNavigate();
-  const location = useLocation();
-  const [user, setUser] = useState(null);
-  const { setInfo } = useContext(InfoContext);
+  const { info, setInfo } = useContext(InfoContext);
 
-  useEffect(() => {
-    const localData = getObj('data');
-    if (!localData) {
-      navigate(`/`);
-    } else {
-      const userCheck = {
-        username: localData?.user.username,
-        password: localData?.user.password,
-      };
-      const checkUserExist = async () => {
-        try {
-          const res = await axios.post(
-            `${process.env.REACT_APP_BECKEND_URL}/users/checkuserexist`,
-            userCheck
-          );
-          if (!res.data) {
-            navigate(`/`);
-          } else {
-            const currentLocatin = location.pathname;
-            if (currentLocatin !== '/button') {
-              navigate(`/button`);
-            }
-            setInfo(localData.data);
-            setUser(localData.user);
-          }
-        } catch (e) {
-          navigate(`/`);
-        }
-      };
-      checkUserExist();
-    }
-  }, []);
+  const deletePage = async (pageId) => {
+    console.log(pageId.toString());
+    await axios.delete(`${process.env.REACT_APP_BECKEND_URL}/page/${pageId}`);
+    setInfo(info.filter((p) => p._id !== pageId));
+  };
 
-  return !user ? (
+  const addPage = async (title) => {
+    const userName = getObj('data')?.user?.username;
+    const res = await axios.post(`${process.env.REACT_APP_BECKEND_URL}/page`, {
+      title,
+      userName,
+    });
+    setInfo([...info, res.data]);
+  };
+
+  return !info ? (
     <div style={{ display: 'grid', placeItems: 'center', height: '100vh' }}>
       <Loading variant={'indeterminate'} />
     </div>
   ) : (
     <>
       <NavBar />
-      <Pages />
-      <AddPage />
+      <Pages pages={info} deletePage={deletePage} />
+      <AddPage click={addPage} />
     </>
   );
 };
