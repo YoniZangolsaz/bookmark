@@ -7,6 +7,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import Avatar from '@mui/material/Avatar';
 import FormDialog from './FormDialog';
+import { InfoContext } from '../InfoContext';
+import axios from 'axios';
 
 const useStyles = makeStyles({
   box: {
@@ -19,9 +21,8 @@ const useStyles = makeStyles({
   },
   paper: {
     minHeight: '20vh',
-    maxHeight: '20vh',
+    maxHeight: '25vh',
     margin: '16px',
-    // borderRadius: '20px',
     alignItems: 'center',
     overflow: 'auto',
     width: '300px',
@@ -49,10 +50,10 @@ const useStyles = makeStyles({
     margin: '5px 0',
     padding: '15px 0',
     letterSpacing: '2px',
-    backgroundColor: '#757575',
+    backgroundColor: '#78909c',
     color: '#FFFFFF',
     textTransform: 'capitalize',
-    '&:hover': { backgroundColor: '#757575', opacity: 0.8 },
+    '&:hover': { backgroundColor: '#78909c', opacity: 0.8 },
   },
   icon: {
     color: 'white',
@@ -63,22 +64,39 @@ const useStyles = makeStyles({
 const Pages = ({ pages, deletePage }) => {
   const classes = useStyles();
   let navigate = useNavigate();
+  const { info, setInfo } = useContext(InfoContext);
   const [open, setOpen] = useState(false);
-  // const deletePage = async (page) => {
-  //   deletePage(page);
-  //   // const newPages = [...pages];
-  //   // setPages(pages.filter((page, i) => pageNumber !== i));
-  // };
+  const [index, setIndex] = useState();
 
-  const addBookmark = async (bookmark) => {};
+  const addBookmark = async (bookmark) => {
+    console.log(bookmark);
+    try {
+      const res = await axios.post(
+        `${process.env.REACT_APP_BECKEND_URL}/bookmark`,
+        {
+          index,
+          bookmark,
+        }
+      );
+      setInfo([...info], pages[index].bookmarks.push(bookmark));
+    } catch {}
+  };
+
+  const openAddBookmark = (pageIndex) => {
+    setIndex(pageIndex);
+    console.log(pageIndex);
+    setOpen(true);
+  };
 
   return (
     <Grid container>
-      <FormDialog
-        open={open}
-        close={() => setOpen(false)}
-        addBookmark={addBookmark}
-      />
+      {open && (
+        <FormDialog
+          open={open}
+          close={() => setOpen(false)}
+          addBookmark={(bookmark) => addBookmark(bookmark)}
+        />
+      )}
       <Box className={classes.box}>
         {pages.map((page, pageIndex) => (
           <Grid key={pageIndex}>
@@ -89,7 +107,7 @@ const Pages = ({ pages, deletePage }) => {
                 </Typography>
                 <IconButton
                   sx={{ paddingRight: 0 }}
-                  onClick={() => setOpen(true)}
+                  onClick={() => openAddBookmark(pageIndex)}
                 >
                   <AddCircleOutlineIcon className={classes.icon} />
                 </IconButton>
@@ -98,7 +116,7 @@ const Pages = ({ pages, deletePage }) => {
                 </IconButton>
               </Box>
               <Box className={classes.pages}>
-                {page.bookmarks.map((bookmarks, i) => (
+                {page?.bookmarks.map((bookmarks, i) => (
                   <div>
                     <Button
                       key={i}
@@ -107,7 +125,7 @@ const Pages = ({ pages, deletePage }) => {
                     >
                       <Avatar
                         sx={{ width: '25px', height: '25px', mr: 0.8 }}
-                        alt='Remy Sharp'
+                        alt={bookmarks.url}
                         src={`${bookmarks.url}/favicon.ico`}
                       />
                       {bookmarks?.title}

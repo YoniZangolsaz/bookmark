@@ -1,10 +1,12 @@
 import bookmarkModel from '../mongo/bookmarkModel';
+import pageModel from '../mongo/pageModel';
 import { bookmarkInterface } from '../interfaces/bookmark.interface';
 
-const addBookmark = async (newBookmark: bookmarkInterface) => {
+const addBookmark = async (newBookmark: bookmarkInterface, pageID: string) => {
   const bookmark = new bookmarkModel(newBookmark);
   await bookmark.save();
-  return bookmark;
+  const page = await pageModel.findByIdAndUpdate(pageID, {bookmarks: bookmark._id})
+  return page;
 };
 
 // const getBtnsTitle = async (): Promise<btnTitleInterface[]> => {

@@ -1,8 +1,8 @@
 import btnRepository from '../repositorys/bookmark.repository';
 import { bookmarkInterface } from '../interfaces/bookmark.interface';
 
-const addBookmark = async (bookmark: bookmarkInterface) => {
-  const newBookmark: any = await btnRepository.addBookmark(bookmark);
+const addBookmark = async (bookmark: bookmarkInterface, pageID: string) => {
+  const newBookmark: any = await btnRepository.addBookmark(bookmark, pageID);
   return newBookmark;
 };
 

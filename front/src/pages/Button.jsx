@@ -12,7 +12,6 @@ const Button = () => {
   const { info, setInfo } = useContext(InfoContext);
 
   const deletePage = async (pageId) => {
-    console.log(pageId.toString());
     await axios.delete(`${process.env.REACT_APP_BECKEND_URL}/page/${pageId}`);
     setInfo(info.filter((p) => p._id !== pageId));
   };

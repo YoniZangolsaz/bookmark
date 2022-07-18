@@ -4,9 +4,10 @@ import { bookmarkInterface } from '../interfaces/bookmark.interface';
 
 const addBookmark = async (req: Request, res: Response) => {
   try {
-    const titleQuery: string = req.body.title;
-    const urlQuery: string = req.body.url;
-    const tagsQuery: string[] = req.body.tags;
+    const pageID:string = req.body.index;
+    const titleQuery: string = req.body.bookmark.title;
+    const urlQuery: string = req.body.bookmark.url;
+    const tagsQuery: string[] = req.body.bookmark.tags || [];
 
     const newBookmark: bookmarkInterface = { 
       title: titleQuery,
@@ -14,7 +15,7 @@ const addBookmark = async (req: Request, res: Response) => {
       tags: tagsQuery,
     };
 
-    const answer = await bookmarkManager.addBookmark(newBookmark);
+    const answer = await bookmarkManager.addBookmark(newBookmark, pageID);
     res.send(answer);
   } catch (err: any) {
     res.status(500).json({ message: err.message });
