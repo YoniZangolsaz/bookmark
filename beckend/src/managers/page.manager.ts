@@ -1,6 +1,8 @@
 import pageRepository from '../repositorys/page.repository';
 import { pageInterface } from '../interfaces/page.interface';
 import userRepository from '../repositorys/user.repository';
+import bookmarkRepository from '../repositorys/bookmark.repository';
+
 // import { btnInterface } from '../interfaces/btn.interface';
 
 const addPage = async (page: pageInterface, userName: string) => {
@@ -22,6 +24,12 @@ const getPageById = async (pageId: string) => {
 
 const deletePage = async (pageId: string) => {
   await userRepository.deletePage(pageId);
+  const bookmarksInPage = await (await pageRepository.getPageById(pageId)).bookmarks
+  console.log(bookmarksInPage);
+  for (let i = 0; i < bookmarksInPage.length; i++) {
+    await bookmarkRepository.deleteBookmark(bookmarksInPage[i])
+  }
+  
   const page: pageInterface = await pageRepository.deletePage(pageId);
   return page;
 };

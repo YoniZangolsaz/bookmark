@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Button,
   IconButton,
@@ -18,11 +18,15 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import { useNavigate } from 'react-router-dom';
 
 const FormDialog = ({ open, close, addBookmark }) => {
+  let navigate = useNavigate();
   const [page, setPage] = useState({ title: '', url: '', tags: [] });
   const [error, setError] = useState({ title: false, url: false });
   const [tag, setTag] = useState('');
+
+
 
   const handlePageChange = (e, key) => {
     e.preventDefault();
@@ -30,7 +34,7 @@ const FormDialog = ({ open, close, addBookmark }) => {
     setError({ ...error, [key]: false });
   };
 
-  const addPage = (e) => {
+  const handleAddBookmark = (e) => {
     e.preventDefault();
     setError({ title: false, url: false });
 
@@ -104,7 +108,7 @@ const FormDialog = ({ open, close, addBookmark }) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={close}>Cancel</Button>
-          <Button onClick={addPage}>Add</Button>
+          <Button onClick={handleAddBookmark}>Add</Button>
         </DialogActions>
       </Dialog>
     </div>

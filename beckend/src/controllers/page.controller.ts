@@ -43,6 +43,8 @@ const getPageById = async (req: Request, res: Response) => {
 const deletePage = async (req: Request, res: Response) => {
   try {
     const pageId = req.params.id;
+    console.log(pageId);
+    
 
     const page: pageInterface = await pageManager.deletePage(pageId);
     res.send(page);

@@ -22,4 +22,20 @@ const deletePage = async (pageId: string): Promise<pageInterface> => {
     .lean();
 };
 
-export default { addPage, getAllPages, getPageById, deletePage };
+const getBookmarksInPage = async (id: string) => {
+  return await pageModel.find({bookmarks: id}).lean();
+};
+
+const deleteBookmark = async (bookmarkId: string) => {
+  const page = await pageModel
+    .findOneAndUpdate(
+      { bookmarks: bookmarkId },
+      { $pull: { bookmarks: bookmarkId } },
+      { new: true }
+    )
+    .lean();
+
+  return page;
+};
+
+export default { addPage, getAllPages, getPageById, deletePage, getBookmarksInPage, deleteBookmark };

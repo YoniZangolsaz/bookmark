@@ -9,6 +9,8 @@ import Avatar from '@mui/material/Avatar';
 import FormDialog from './FormDialog';
 import { InfoContext } from '../InfoContext';
 import axios from 'axios';
+import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
+import Swal from 'sweetalert2';
 
 const useStyles = makeStyles({
   box: {
@@ -44,16 +46,12 @@ const useStyles = makeStyles({
     flexDirection: 'column',
     margin: '10px 20px',
   },
-  button: {
+  bookmark: {
     width: '100%',
     height: '0px',
-    margin: '5px 0',
-    padding: '15px 0',
-    letterSpacing: '2px',
-    backgroundColor: '#78909c',
-    color: '#FFFFFF',
+    margin: '0 0 22px 2px',
+    letterSpacing: '1.5px',
     textTransform: 'capitalize',
-    '&:hover': { backgroundColor: '#78909c', opacity: 0.8 },
   },
   icon: {
     color: 'white',
@@ -69,7 +67,6 @@ const Pages = ({ pages, deletePage }) => {
   const [index, setIndex] = useState();
 
   const addBookmark = async (bookmark) => {
-    console.log(bookmark);
     try {
       const res = await axios.post(
         `${process.env.REACT_APP_BECKEND_URL}/bookmark`,
@@ -78,15 +75,48 @@ const Pages = ({ pages, deletePage }) => {
           bookmark,
         }
       );
-      setInfo([...info], pages[index].bookmarks.push(bookmark));
-    } catch {}
+      pages[index].bookmarks.push(bookmark)
+      setInfo([...pages]);
+    } catch {
+      navigate('/button');
+    }
   };
 
-  const openAddBookmark = (pageIndex) => {
-    setIndex(pageIndex);
-    console.log(pageIndex);
+  const deleteBookmark = async (bookmark) => {
+    const swalRes = await Swal.fire({
+      title: 'Are you sure you want to delete this bookmark?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, I am sure!',
+    });
+    if (!swalRes.isConfirmed) {
+      return '';
+    }
+    try {
+
+      const res = await axios.delete(
+        `${process.env.REACT_APP_BECKEND_URL}/bookmark`, {
+          index,
+          bookmark,
+        }
+      );
+      setInfo([...info, pages[index].bookmarks.pull(bookmark)]);
+      
+
+    } catch {
+      navigate('/button');
+    }
+  };
+
+  const openAddBookmark = (pageId) => {
+    setIndex(pageId);
+    console.log(pageId);
     setOpen(true);
   };
+
+  useEffect(() => {}, [pages]);
 
   return (
     <Grid container>
@@ -107,7 +137,7 @@ const Pages = ({ pages, deletePage }) => {
                 </Typography>
                 <IconButton
                   sx={{ paddingRight: 0 }}
-                  onClick={() => openAddBookmark(pageIndex)}
+                  onClick={() => openAddBookmark(page._id)}
                 >
                   <AddCircleOutlineIcon className={classes.icon} />
                 </IconButton>
@@ -117,20 +147,38 @@ const Pages = ({ pages, deletePage }) => {
               </Box>
               <Box className={classes.pages}>
                 {page?.bookmarks.map((bookmarks, i) => (
-                  <div>
-                    <Button
-                      key={i}
-                      href={bookmarks.url}
-                      className={classes.button}
-                    >
-                      <Avatar
-                        sx={{ width: '25px', height: '25px', mr: 0.8 }}
-                        alt={bookmarks.url}
-                        src={`${bookmarks.url}/favicon.ico`}
-                      />
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      marginBottom: '5px',
+                    }}
+                  >
+                    <Avatar
+                      sx={{
+                        width: '25px',
+                        height: '25px',
+                        mr: 0.8,
+                        backgroundColor: '#1e88e5',
+                        textTransform: 'capitalize'
+                      }}
+                      alt={bookmarks.url}
+                      src={`${bookmarks.url}/favicon.ico`}
+                    />
+                    <Typography key={i} className={classes.bookmark}>
                       {bookmarks?.title}
-                    </Button>
-                  </div>
+                    </Typography>
+                    <IconButton
+                      size='small'
+                      onClick={() => deleteBookmark(bookmarks._id)}
+                    >
+                      <DeleteIcon sx={{ color: 'red' }} />
+                    </IconButton>
+                    <IconButton size='small' href={bookmarks.url}>
+                      <ArrowCircleRightIcon sx={{ color: '#009688' }} />
+                    </IconButton>
+                  </Box>
                 ))}
               </Box>
             </Paper>

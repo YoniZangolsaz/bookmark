@@ -16,7 +16,6 @@ export const InfoProvider = (props) => {
   });
 
   useEffect(() => {
-    console.log('dsa');
     const localData = getObj('data');
     if (!localData) {
       navigate(`/`);

@@ -22,7 +22,7 @@ const Button = () => {
       title,
       userName,
     });
-    setInfo([...info, res.data]);
+    setInfo(prevInfo => [...prevInfo, res.data]);
   };
 
   return !info ? (

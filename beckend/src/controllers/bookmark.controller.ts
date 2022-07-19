@@ -22,6 +22,18 @@ const addBookmark = async (req: Request, res: Response) => {
   }
 };
 
+const deleteBookmark = async (req: Request, res: Response) => {
+  try {
+    const pageID:string = req.body.index;
+    const bookmarkId: string = req.body.bookmark;
+
+    const bookmark: bookmarkInterface = await bookmarkManager.deleteBookmark(bookmarkId, pageID);
+    res.send(bookmark);
+  } catch (err: any) {
+    res.status(err?.response?.status || 500).json({ message: err.message });
+  }
+};
+
 // const getBtnsTitle = async (_req: Request, res: Response) => {
 //   try {
 //     const btnsTitle: btnTitleInterface[] = await btnManager.getBtnsTitle(); // TODO: add prettier
@@ -51,4 +63,4 @@ const addBookmark = async (req: Request, res: Response) => {
 //   }
 // };
 
-export default { addBookmark };
+export default { addBookmark, deleteBookmark };
