@@ -4,8 +4,4 @@ interface bookmarkInterface {
   tags?: string[];
 }
 
-interface bookmarkTitleInterface {
-  title: string;
-}
-
-export { bookmarkInterface, bookmarkTitleInterface };
+export { bookmarkInterface };

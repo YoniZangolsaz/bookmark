@@ -10,119 +10,80 @@ export const InfoProvider = (props) => {
   let navigate = useNavigate();
   const location = useLocation();
 
-  const [index, setIndex] = useState({
-    pageNum: 0,
-    btnNum: 0,
-  });
+  const loadPages = () => {
+    console.log(info);
+    if (location.pathname !== '/signup') {
+      const localData = getObj('data');
+      if (!localData) {
+        navigate(`/`);
+      } else {
+        const userCheck = {
+          username: localData?.user.username,
+          password: localData?.user.password,
+        };
+        const checkUserExist = async () => {
+          try {
+            const res = await axios.post(
+              `${process.env.REACT_APP_BECKEND_URL}/users/userData`,
+              userCheck
+            );
+            if (!res.data) {
+              navigate(`/`);
+            } else {
+              const currentLocatin = location.pathname;
+              if (currentLocatin !== '/bookmark') {
+                navigate(`/bookmark`);
+              }
+              setInfo(res.data);
+              setObj('data', { ...localData, data: res.data });
+            }
+          } catch (e) {
+            navigate(`/`);
+          }
+        };
+        checkUserExist();
+      }
+    }
+  };
 
   useEffect(() => {
-    const localData = getObj('data');
-    if (!localData) {
-      navigate(`/`);
-    } else {
-      const userCheck = {
-        username: localData?.user.username,
-        password: localData?.user.password,
-      };
-      const checkUserExist = async () => {
-        try {
-          const res = await axios.post(
-            `${process.env.REACT_APP_BECKEND_URL}/users/userData`,
-            userCheck
-          );
-          if (!res.data) {
-            navigate(`/`);
-          } else {
-            const currentLocatin = location.pathname;
-            if (currentLocatin !== '/button') {
-              navigate(`/button`);
-            }
-            setInfo(res.data);
-            setObj('data', { ...localData, data: res.data });
-          }
-        } catch (e) {
-          navigate(`/`);
-        }
-      };
-      checkUserExist();
-    }
+    loadPages();
   }, []);
 
-  const getBtn = () => {
-    let newInfo = info;
-
-    if (!newInfo) {
-      newInfo = getObj('data')?.data;
-      if (!newInfo) return;
-
-      setInfo(newInfo || 'no data');
-    }
-
-    return newInfo[index.pageNum - 1].btns[index.btnNum];
-  };
-
-  const setBtnByTitle = (pageTitle, btnTitle) => {
-    let newInfo = info;
-
-    if (!newInfo) {
-      newInfo = getObj('data')?.data;
-      if (!newInfo) return;
-      setInfo(newInfo || 'no data');
-    }
-
-    const pageIndex = newInfo.findIndex(
-      (page) => page.title.toLowerCase() === pageTitle.toLowerCase()
+  const addLocalNewBookmark = (pageObjectId, newBookmark) => {
+    setInfo((prevInfo) =>
+      prevInfo.map((page) => {
+        if (page._id === pageObjectId) {
+          page.bookmarks.push(newBookmark);
+        }
+        return page;
+      })
     );
+  };
 
-    const btnIndex = newInfo[pageIndex].btns.findIndex(
-      (btn) => btn.title.toLowerCase() === btnTitle.toLowerCase()
+  const removeLocalBookmark = (pageObjectId, newBookmark) => {
+    setInfo((prevInfo) =>
+      prevInfo.map((page) => {
+        if (page._id === pageObjectId) {
+          // page.bookmarks.pull(newBookmark);
+          page.bookmarks.filter((book) => book.id !== book._id)
+        }
+        return page;
+      })
     );
+  }
 
-    setIndex({ pageNum: pageIndex, btnNum: btnIndex });
-    return newInfo[pageIndex].btns[btnIndex];
-  };
-
-  const getTypeReq = () => {
-    let newInfo = info;
-    if (!newInfo) {
-      newInfo = getObj('data')?.data;
-      if (!newInfo) return;
-      setInfo(newInfo || 'no data');
-    }
-    return newInfo[index?.pageNum]?.title?.toLowerCase();
-  };
-
-  const changeBtn = (page, btnIndex) => {
-    setIndex({
-      pageNum: page,
-      btnNum: btnIndex,
-    });
-  };
-
-  const getUserRule = () => {
-    let newInfo = info;
-    if (!newInfo) {
-      newInfo = getObj('data')?.user;
-      if (!newInfo) return;
-      setInfo(newInfo || 'no data');
-    }
-    return newInfo;
-  };
 
   return (
     <InfoContext.Provider
       value={{
         info,
-        changeBtn,
-        getBtn,
-        getTypeReq,
         setInfo,
-        setBtnByTitle,
-        getUserRule,
+        addLocalNewBookmark,
+        removeLocalBookmark
       }}
     >
       {props.children}
     </InfoContext.Provider>
   );
 };
-

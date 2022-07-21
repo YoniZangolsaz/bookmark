@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
 import config from '../config/config';
 
-// Mongoose schema of the merged object
 const pageSchema = new mongoose.Schema(
   {
     title: { type: String, required: true },

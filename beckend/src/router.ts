@@ -17,7 +17,6 @@ function routers(app: Application) {
   app.use('/bookmark', bookmarkRouter);
   app.use('/page', pageRouter);
 
-  // TODO: isAlive should probably check connection to mongo
   app.use('/isAlive', (_req: Request, res: Response) => {
     res.status(200).send('alive');
   });

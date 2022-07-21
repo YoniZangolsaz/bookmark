@@ -7,13 +7,39 @@ import Loading from '../components/Loading';
 import AddPage from '../components/AddPage';
 import axios from 'axios';
 import { getObj } from '../utils/localStorage';
+import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
+import Search from '../components/Search';
 
 const Button = () => {
+  const navigate = useNavigate();
   const { info, setInfo } = useContext(InfoContext);
 
   const deletePage = async (pageId) => {
-    await axios.delete(`${process.env.REACT_APP_BECKEND_URL}/page/${pageId}`);
-    setInfo(info.filter((p) => p._id !== pageId));
+    const swalRes = await Swal.fire({
+      title: 'Are you sure you want to delete this page?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, I am sure!',
+    });
+    if (!swalRes.isConfirmed) {
+      return '';
+    }
+    try {
+      await axios.delete(`${process.env.REACT_APP_BECKEND_URL}/page/${pageId}`);
+      setInfo(info.filter((page) => page._id !== pageId));
+    } catch {
+      const swalRes = await Swal.fire({
+        icon: 'error',
+        title: 'error',
+        text: 'There is a problem to delete this page, Try again',
+      });
+      if (swalRes.isConfirmed) {
+        navigate('/bookmark');
+      }
+    }
   };
 
   const addPage = async (title) => {
@@ -22,7 +48,7 @@ const Button = () => {
       title,
       userName,
     });
-    setInfo(prevInfo => [...prevInfo, res.data]);
+    setInfo((prevInfo) => [...prevInfo, res.data]);
   };
 
   return !info ? (
@@ -32,6 +58,7 @@ const Button = () => {
   ) : (
     <>
       <NavBar />
+      <Search />
       <Pages pages={info} deletePage={deletePage} />
       <AddPage click={addPage} />
     </>

@@ -3,16 +3,6 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { green } from '@mui/material/colors';
 import { makeStyles } from '@mui/styles';
 import Swal from 'sweetalert2';
-import {
-  TextField,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Button,
-  Box,
-} from '@mui/material';
 
 const useStyles = makeStyles({
   addIcon: {
@@ -50,7 +40,7 @@ const AddPage = ({ click }) => {
       <AddCircleOutlineIcon
         className={classes.addIcon}
         onClick={handleAddPage}
-        fontSize='large'
+        size='large'
       />
     </>
   );

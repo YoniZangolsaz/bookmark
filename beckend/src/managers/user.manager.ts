@@ -1,10 +1,7 @@
 import userRepository from '../repositorys/user.repository';
-import {
-  userInterface,
-  usernameInterface,
-  // usernamesAndRolesInterface,
-} from '../interfaces/user.interface';
-// import pageManager from '../managers/page.manager';
+// import {
+//   userInterface,
+//   } from '../interfaces/user.interface';
 import config from '../config/config';
 
 const crypto = require('crypto');
@@ -31,10 +28,6 @@ const userData = async (name: string, password: string) => {
   return user.pages;
 };
 
-const getUserById = async (userId: string) => {
-  const user: userInterface = await userRepository.getUserById(userId);
-  return user;
-};
 
 const addUser = async (user: any) => {
   user.password = encrypt(user.password, secretKey, initializationVector);
@@ -42,40 +35,6 @@ const addUser = async (user: any) => {
   return newUser;
 };
 
-const getAllusernames = async () => {
-  const getAllusernames: usernameInterface[] =
-    await userRepository.getAllusernames();
-  return getAllusernames;
-};
-
-// const getAllusernamesAndRoles = async () => {
-//   const getAllusernamesAndRoles: usernamesAndRolesInterface[] =
-//     await userRepository.getAllusernamesAndRoles();
-//   return getAllusernamesAndRoles;
-// };
-
-const checkIfUserNameExist = async (userName: string) => {
-  const user: boolean = await userRepository.checkIfUserNameExist(userName);
-  return user;
-};
-
-const checkUserRole = async (userName: string, password: string) => {
-  const user: boolean = await userRepository.checkUserRole(userName, password);
-  return user;
-};
-
-const checkUserExist = async (userName: string, password: string) => {
-  const user: boolean = await userRepository.checkUserExist(userName, password);
-  return user;
-};
-
-const changeUserName = async (oldUserName: string, newUserName: string) => {
-  const username: boolean = await userRepository.changeUserName(
-    oldUserName,
-    newUserName
-  );
-  return username;
-};
 
 const addPage = async (userName: string, pageId: string) => {
   const user = await userRepository.addPage(userName, pageId);
@@ -84,14 +43,7 @@ const addPage = async (userName: string, pageId: string) => {
 
 export default {
   getUser,
-  getUserById,
   addUser,
-  getAllusernames,
-  checkIfUserNameExist,
-  checkUserRole,
-  checkUserExist,
-  // getAllusernamesAndRoles,
-  changeUserName,
   userData,
   addPage
 };

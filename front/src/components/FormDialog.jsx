@@ -107,8 +107,8 @@ const FormDialog = ({ open, close, addBookmark }) => {
           </Stack>
         </DialogContent>
         <DialogActions>
-          <Button onClick={close}>Cancel</Button>
-          <Button onClick={handleAddBookmark}>Add</Button>
+          <Button variant='outlined' sx={{textTransform: 'capitalize',}} onClick={close}>Cancel</Button>
+          <Button variant='outlined' sx={{textTransform: 'capitalize',}} onClick={handleAddBookmark}>Add</Button>
         </DialogActions>
       </Dialog>
     </div>

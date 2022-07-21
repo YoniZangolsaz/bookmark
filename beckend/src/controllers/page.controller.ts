@@ -6,11 +6,11 @@ const addPage = async (req: Request, res: Response) => {
   try {
     const userName = req.body.userName;
     const titleQuery: string = req.body.title;
-    const btnsQuery: string[] = req.body.btns || [];
+    const bookmarksQuery: string[] = req.body.bookmarks || [];
 
-    const newPage: any = {
+    const newPage: pageInterface = {
       title: titleQuery,
-      btns: btnsQuery,
+      bookmarks: bookmarksQuery,
     };
 
     const answer = await pageManager.addPage(newPage, userName);
@@ -20,31 +20,10 @@ const addPage = async (req: Request, res: Response) => {
   }
 };
 
-const getAllPages = async (_req: Request, res: Response) => {
-  try {
-    const allPages: pageInterface[] = await pageManager.getAllPages();
-    res.send(allPages);
-  } catch (err: any) {
-    res.status(err?.response?.status || 500).json({ message: err.message });
-  }
-};
-
-const getPageById = async (req: Request, res: Response) => {
-  try {
-    const pageId = req.params.id;
-
-    const page: pageInterface = await pageManager.getPageById(pageId);
-    res.send(page);
-  } catch (err: any) {
-    res.status(err?.response?.status || 500).json({ message: err.message });
-  }
-};
-
 const deletePage = async (req: Request, res: Response) => {
   try {
     const pageId = req.params.id;
     console.log(pageId);
-    
 
     const page: pageInterface = await pageManager.deletePage(pageId);
     res.send(page);
@@ -53,19 +32,4 @@ const deletePage = async (req: Request, res: Response) => {
   }
 };
 
-// const putBtnInPage = async (req: Request, res: Response) => {
-//     try {
-//       const pageId: string = req.params.id;
-//       const btnId: string = req.body.btns;
-
-//       const answer: pageInterface = await pageManager.updateBtnsInPage(
-//         pageId,
-//         btnId
-//       );
-//       res.send(answer);
-//     } catch (err: any) {
-//       res.status(500).json({ message: err.message });
-//     }
-//   };
-
-export default { addPage, getAllPages, getPageById, deletePage };
+export default { addPage, deletePage };

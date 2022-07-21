@@ -6,7 +6,6 @@ export default async function startFunction() {
   console.log('try connect to mongo');
   await mongo();
   console.log('mongo connect');
-  // TODO: (retry?) before start server
   startServer();
 }
 

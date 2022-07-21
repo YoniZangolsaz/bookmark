@@ -6,23 +6,13 @@ interface userInterface {
   pages?: string[];
 }
 
-interface usernameInterface {
-  username: string;
-}
-
-interface usernamesAndRolesInterface {
-  username: string;
-}
-
 interface userAggregateInterface {
   username: string;
   password: string;
-  pages?: unknown[] | undefined;
+  pages?: openPageInterface;
 }
 
 export {
   userInterface,
-  usernameInterface,
   userAggregateInterface,
-  usernamesAndRolesInterface,
 };

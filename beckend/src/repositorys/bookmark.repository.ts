@@ -17,16 +17,4 @@ const deleteBookmark = async (bookmarkId: string): Promise<bookmarkInterface> =>
     .lean();
 };
 
-// const getBtnsTitle = async (): Promise<btnTitleInterface[]> => {
-//   return await bookmarkModel.find({}).select('title');
-// };
-
-// const getAllBtns = async (): Promise<btnInterface[]> => {
-//   return await bookmarkModel.find({});
-// };
-
-// const getBtnById = async (title: string): Promise<btnInterface> => {
-//   return await bookmarkModel.findById(title).lean();
-// };
-
 export default { addBookmark, deleteBookmark };

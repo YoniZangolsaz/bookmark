@@ -4,11 +4,6 @@ import bookmarkController from '../controllers/bookmark.controller';
 const router = express.Router();
 
 router.post('/', bookmarkController.addBookmark);
-router.delete('/', bookmarkController.deleteBookmark);
-// router.get('/title', btnController.getBtnsTitle);
-// router.get('/:id', btnController.getBtnById);
-// router.get('/', btnController.getAllBtns);
-
-
+router.delete('/:bookmarkId', bookmarkController.deleteBookmark);
 
 export default router;
