@@ -69,12 +69,6 @@ const Pages = ({ pages, deletePage }) => {
   const [pageId, setPageId] = useState();
   const [allPages, setAllPages] = useState(pages);
   const [pagesFiltered, setPagesFiltered] = useState(pages);
-  console.log(pagesFiltered);
-
-  // useEffect(() => {
-  //   setAllPages(pages);
-  //   setPagesFiltered(pages)
-  // }, []);
 
   const addBookmark = async (bookmark) => {
     try {
@@ -136,7 +130,12 @@ const Pages = ({ pages, deletePage }) => {
   };
 
   const filterData = (value) => {
-    const resData = allPages.map((page) => {return {...page, bookmarks: page.bookmarks.filter(({title}) => title.includes(value))}});
+    const resData = allPages.map((page) => {
+      return {
+        ...page, bookmarks: page.bookmarks.filter(({ title }) => title.startsWith(value)
+        )
+      }
+    });
     setPagesFiltered(resData);
   };
 
