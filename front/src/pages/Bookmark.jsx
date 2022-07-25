@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-no-undef */
 import React, { useContext } from 'react';
 import Pages from '../components/Pages';
 import NavBar from '../components/NavBar';
@@ -9,7 +8,6 @@ import axios from 'axios';
 import { getObj } from '../utils/localStorage';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
-import Search from '../components/Search';
 
 const Button = () => {
   const navigate = useNavigate();
@@ -58,7 +56,6 @@ const Button = () => {
   ) : (
     <>
       <NavBar />
-      <Search />
       <Pages pages={info} deletePage={deletePage} />
       <AddPage click={addPage} />
     </>

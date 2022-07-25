@@ -11,6 +11,7 @@ import { InfoContext } from '../InfoContext';
 import axios from 'axios';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 import Swal from 'sweetalert2';
+import Search from './Search';
 
 const useStyles = makeStyles({
   box: {
@@ -61,10 +62,19 @@ const useStyles = makeStyles({
 const Pages = ({ pages, deletePage }) => {
   const classes = useStyles();
   let navigate = useNavigate();
-  const { info, setInfo, addLocalNewBookmark, removeLocalBookmark } = useContext(InfoContext);
+  const { info, setInfo, addLocalNewBookmark, removeLocalBookmark } =
+    useContext(InfoContext);
   const [open, setOpen] = useState(false);
   const [indexPage, setIndexPage] = useState();
   const [pageId, setPageId] = useState();
+  const [allPages, setAllPages] = useState(pages);
+  const [pagesFiltered, setPagesFiltered] = useState(pages);
+  console.log(pagesFiltered);
+
+  // useEffect(() => {
+  //   setAllPages(pages);
+  //   setPagesFiltered(pages)
+  // }, []);
 
   const addBookmark = async (bookmark) => {
     try {
@@ -83,7 +93,7 @@ const Pages = ({ pages, deletePage }) => {
 
   const deleteBookmark = async (bookmark, pageObjectId, pageIndex) => {
     console.log(bookmark);
-    const bookmarkId = bookmark._id
+    const bookmarkId = bookmark._id;
     // setPageId(pageObjectId);
     // setIndexPage(pageIndex)
     const swalRes = await Swal.fire({
@@ -101,13 +111,15 @@ const Pages = ({ pages, deletePage }) => {
       const res = await axios.delete(
         `${process.env.REACT_APP_BECKEND_URL}/bookmark/${bookmarkId}`
       );
-    //   removeLocalBookmark(pageObjectId, bookmark)
-    //  setInfo(pages[pageIndex].bookmarks.pull(bookmark))
-    console.log(1);
-     setInfo(pages[pageIndex].bookmarks.filter((book) => book._id !== book._id))
-     console.log(2);
+      //   removeLocalBookmark(pageObjectId, bookmark)
+      //  setInfo(pages[pageIndex].bookmarks.pull(bookmark))
+      console.log(1);
+      setInfo(
+        pages[pageIndex].bookmarks.filter((book) => book._id !== book._id)
+      );
+      console.log(2);
 
-     setInfo([...pages])
+      setInfo([...pages]);
     } catch {
       navigate('/bookmark');
     }
@@ -115,13 +127,17 @@ const Pages = ({ pages, deletePage }) => {
 
   // setInfo(info.filter((page) => page._id !== pageId));
 
-
   const openAddBookmark = (pageId, pageIndex) => {
     // console.log(pageId);
     // console.log(pageIndex);
     setIndexPage(pageIndex);
     setPageId(pageId);
     setOpen(true);
+  };
+
+  const filterData = (value) => {
+    const resData = allPages.map((page) => {return {...page, bookmarks: page.bookmarks.filter(({title}) => title.includes(value))}});
+    setPagesFiltered(resData);
   };
 
   return (
@@ -133,8 +149,9 @@ const Pages = ({ pages, deletePage }) => {
           addBookmark={(bookmark) => addBookmark(bookmark)}
         />
       )}
+      <Search setData={filterData} />
       <Box className={classes.box}>
-        {pages.map((page, pageIndex) => (
+        {pagesFiltered?.map((page, pageIndex) => (
           <Grid key={pageIndex}>
             <Paper elevation={3} variant='elevation' className={classes.paper}>
               <Box sx={{ display: 'flex', backgroundColor: '#01579b' }}>
@@ -152,8 +169,9 @@ const Pages = ({ pages, deletePage }) => {
                 </IconButton>
               </Box>
               <Box className={classes.pages}>
-                {page?.bookmarks.map((bookmarks, i) => (
+                {page?.bookmarks?.map((bookmarks, i) => (
                   <Box
+                    key={i}
                     sx={{
                       display: 'flex',
                       flexDirection: 'row',
@@ -176,7 +194,9 @@ const Pages = ({ pages, deletePage }) => {
                     </Typography>
                     <IconButton
                       size='small'
-                      onClick={() => deleteBookmark(bookmarks, page._id, pageIndex)}
+                      onClick={() =>
+                        deleteBookmark(bookmarks, page._id, pageIndex)
+                      }
                     >
                       <DeleteIcon sx={{ color: 'red' }} />
                     </IconButton>

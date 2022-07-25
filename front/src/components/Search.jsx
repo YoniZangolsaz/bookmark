@@ -1,14 +1,13 @@
 import React from 'react';
 import SearchIcon from '@mui/icons-material/Search';
-import { TextField, Container, Box } from '@mui/material';
+import { TextField, Container } from '@mui/material';
 import InputAdornment from '@mui/material/InputAdornment';
 
 const Search = ({ setData }) => {
   return (
-    <Container maxWidth = 'sm'>
-      <Box sx={{alignItems: 'center'}}>
+    <Container maxWidth='sm'>
       <TextField
-        sx={{ width: '100%', mb: 10, mt: 8, justifyContent: 'center' }}
+        sx={{ width: '100%', mb: 8, mt: 8, justifyContent: 'center' }}
         color='info'
         placeholder='Search…'
         variant='outlined'
@@ -23,7 +22,6 @@ const Search = ({ setData }) => {
       >
         <SearchIcon />
       </TextField>
-      </Box>
     </Container>
   );
 };
