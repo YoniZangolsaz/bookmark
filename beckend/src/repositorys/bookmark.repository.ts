@@ -7,8 +7,8 @@ import mongoose from 'mongoose';
 const addBookmark = async (newBookmark: bookmarkInterface, pageID: string) => {
   const bookmark = new bookmarkModel(newBookmark);
   await bookmark.save();
-  const page = await pageModel.findByIdAndUpdate(pageID, {$push: {bookmarks: bookmark._id}})
-  return page;
+  await pageModel.findByIdAndUpdate(pageID, {$push: {bookmarks: bookmark._id}})
+  return bookmark;
 };
 
 const deleteBookmark = async (bookmarkId: string): Promise<bookmarkInterface> => {

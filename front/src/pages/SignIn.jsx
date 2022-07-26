@@ -55,7 +55,7 @@ const SignIn = () => {
           user
         );
         setObj('data', res.data);
-        navigate('/button');
+        navigate('/bookmark');
       } catch (error) {
         setError({ username: true, password: true });
       }

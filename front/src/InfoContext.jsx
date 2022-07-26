@@ -50,37 +50,12 @@ export const InfoProvider = (props) => {
     loadPages();
   }, []);
 
-  const addLocalNewBookmark = (pageObjectId, newBookmark) => {
-    setInfo((prevInfo) =>
-      prevInfo.map((page) => {
-        if (page._id === pageObjectId) {
-          page.bookmarks.push(newBookmark);
-        }
-        return page;
-      })
-    );
-  };
-
-  const removeLocalBookmark = (pageObjectId, newBookmark) => {
-    setInfo((prevInfo) =>
-      prevInfo.map((page) => {
-        if (page._id === pageObjectId) {
-          // page.bookmarks.pull(newBookmark);
-          page.bookmarks.filter((book) => book.id !== book._id)
-        }
-        return page;
-      })
-    );
-  }
-
 
   return (
     <InfoContext.Provider
       value={{
         info,
-        setInfo,
-        addLocalNewBookmark,
-        removeLocalBookmark
+        setInfo
       }}
     >
       {props.children}

@@ -1,7 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { Box, Paper, Typography, Grid, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { makeStyles } from '@mui/styles';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
@@ -12,8 +11,9 @@ import axios from 'axios';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 import Swal from 'sweetalert2';
 import Search from './Search';
+import SelectList from './Select';
 
-const useStyles = makeStyles({
+const useStyles = {
   box: {
     display: 'flex',
     flexWrap: 'wrap',
@@ -57,29 +57,38 @@ const useStyles = makeStyles({
     color: 'white',
     '&:hover': { opacity: '0.7' },
   },
-});
+  boxBookmark: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: '5px',
+  },
+  avatar: {
+    width: '25px',
+    height: '25px',
+    mr: 0.8,
+    textTransform: 'capitalize',
+  },
+};
 
 const Pages = ({ pages, deletePage }) => {
-  const classes = useStyles();
   let navigate = useNavigate();
-  const { info, setInfo, addLocalNewBookmark, removeLocalBookmark } =
-    useContext(InfoContext);
+  const { setInfo } = useContext(InfoContext);
   const [open, setOpen] = useState(false);
   const [indexPage, setIndexPage] = useState();
   const [pageId, setPageId] = useState();
-  const [allPages, setAllPages] = useState(pages);
-  const [pagesFiltered, setPagesFiltered] = useState(pages);
+  const [filter, setFilter] = useState('');
+  const [tags, setTags] = useState([]);
+  const [tagInput, setTagInput] = useState('');
 
   const addBookmark = async (bookmark) => {
     try {
       const res = await axios.post(
         `${process.env.REACT_APP_BECKEND_URL}/bookmark`,
-        {
-          pageId,
-          bookmark,
-        }
+        { pageId, bookmark }
       );
-      addLocalNewBookmark(pageId, bookmark);
+      pages[indexPage].bookmarks.push(res.data);
+      setInfo([...pages]);
     } catch {
       navigate('/bookmark');
     }
@@ -88,8 +97,6 @@ const Pages = ({ pages, deletePage }) => {
   const deleteBookmark = async (bookmark, pageObjectId, pageIndex) => {
     console.log(bookmark);
     const bookmarkId = bookmark._id;
-    // setPageId(pageObjectId);
-    // setIndexPage(pageIndex)
     const swalRes = await Swal.fire({
       title: 'Are you sure you want to delete this bookmark?',
       icon: 'warning',
@@ -102,42 +109,54 @@ const Pages = ({ pages, deletePage }) => {
       return '';
     }
     try {
-      const res = await axios.delete(
+      await axios.delete(
         `${process.env.REACT_APP_BECKEND_URL}/bookmark/${bookmarkId}`
       );
-      //   removeLocalBookmark(pageObjectId, bookmark)
-      //  setInfo(pages[pageIndex].bookmarks.pull(bookmark))
-      console.log(1);
-      setInfo(
-        pages[pageIndex].bookmarks.filter((book) => book._id !== book._id)
+      pages[pageIndex].bookmarks = pages[pageIndex].bookmarks.filter(
+        (book) => book._id !== bookmark._id
       );
-      console.log(2);
-
       setInfo([...pages]);
     } catch {
       navigate('/bookmark');
     }
   };
 
-  // setInfo(info.filter((page) => page._id !== pageId));
-
   const openAddBookmark = (pageId, pageIndex) => {
-    // console.log(pageId);
-    // console.log(pageIndex);
     setIndexPage(pageIndex);
     setPageId(pageId);
     setOpen(true);
   };
 
   const filterData = (value) => {
-    const resData = allPages.map((page) => {
-      return {
-        ...page, bookmarks: page.bookmarks.filter(({ title }) => title.startsWith(value)
-        )
-      }
-    });
-    setPagesFiltered(resData);
+    setFilter(value);
   };
+
+  const filteredBookmarks = () => {
+    return pages.map((page) => {
+      return {
+        ...page,
+        bookmarks: page.bookmarks.filter(({ title }) =>
+          title.toLowerCase().startsWith(filter.toLowerCase())
+        ),
+      };
+    });
+  };
+
+  useEffect(() => {
+    const getUserTags = () => {
+      const userTags = new Set();
+      setTags(userTags);
+      userTags.add('');
+      for (let i = 0; i < pages.length; i++) {
+        for (let j = 0; j < pages[i]?.bookmarks?.length; j++) {
+          for (let k = 0; k < pages[i].bookmarks[j].tags.length; k++) {
+            userTags.add(pages[i].bookmarks[j].tags[k]);
+          }
+        }
+      }
+    };
+    getUserTags();
+  }, []);
 
   return (
     <Grid container>
@@ -148,47 +167,51 @@ const Pages = ({ pages, deletePage }) => {
           addBookmark={(bookmark) => addBookmark(bookmark)}
         />
       )}
-      <Search setData={filterData} />
-      <Box className={classes.box}>
-        {pagesFiltered?.map((page, pageIndex) => (
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          margin: '8px 0px 56px 24px',
+        }}
+      >
+        <Search sx={{ m: 1 }} setData={filterData} />
+        <SelectList
+          array={tags}
+          inputLabel={'Tags Filter'}
+          value={tagInput}
+          onChange={(e) => {
+            setTagInput(e.target.value);
+            console.log(tagInput);
+          }}
+        />
+      </Box>
+      <Box sx={useStyles.box}>
+        {filteredBookmarks()?.map((page, pageIndex) => (
           <Grid key={pageIndex}>
-            <Paper elevation={3} variant='elevation' className={classes.paper}>
+            <Paper elevation={3} variant='elevation' sx={useStyles.paper}>
               <Box sx={{ display: 'flex', backgroundColor: '#01579b' }}>
-                <Typography variant='h5' className={classes.typographyHeader}>
+                <Typography variant='h5' sx={useStyles.typographyHeader}>
                   {page.title}
                 </Typography>
                 <IconButton
                   sx={{ paddingRight: 0 }}
                   onClick={() => openAddBookmark(page._id, pageIndex)}
                 >
-                  <AddCircleOutlineIcon className={classes.icon} />
+                  <AddCircleOutlineIcon sx={useStyles.icon} />
                 </IconButton>
                 <IconButton onClick={() => deletePage(page._id)}>
-                  <DeleteIcon className={classes.icon} />
+                  <DeleteIcon sx={useStyles.icon} />
                 </IconButton>
               </Box>
-              <Box className={classes.pages}>
+              <Box sx={useStyles.pages}>
                 {page?.bookmarks?.map((bookmarks, i) => (
-                  <Box
-                    key={i}
-                    sx={{
-                      display: 'flex',
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      marginBottom: '5px',
-                    }}
-                  >
+                  <Box sx={useStyles.boxBookmark} key={i}>
                     <Avatar
-                      sx={{
-                        width: '25px',
-                        height: '25px',
-                        mr: 0.8,
-                        textTransform: 'capitalize',
-                      }}
+                      sx={useStyles.avatar}
                       alt={bookmarks.url}
                       src={`${bookmarks.url}/favicon.ico`}
                     />
-                    <Typography key={i} className={classes.bookmark}>
+                    <Typography key={i} sx={useStyles.bookmark}>
                       {bookmarks?.title}
                     </Typography>
                     <IconButton

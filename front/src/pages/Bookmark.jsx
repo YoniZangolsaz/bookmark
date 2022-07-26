@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import Pages from '../components/Pages';
 import NavBar from '../components/NavBar';
 import { InfoContext } from '../InfoContext';
@@ -9,9 +9,10 @@ import { getObj } from '../utils/localStorage';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 
-const Button = () => {
+const Bookmark = () => {
   const navigate = useNavigate();
   const { info, setInfo } = useContext(InfoContext);
+
 
   const deletePage = async (pageId) => {
     const swalRes = await Swal.fire({
@@ -28,6 +29,8 @@ const Button = () => {
     try {
       await axios.delete(`${process.env.REACT_APP_BECKEND_URL}/page/${pageId}`);
       setInfo(info.filter((page) => page._id !== pageId));
+      console.log(pageId);
+      console.log(info);
     } catch {
       const swalRes = await Swal.fire({
         icon: 'error',
@@ -46,6 +49,7 @@ const Button = () => {
       title,
       userName,
     });
+
     setInfo((prevInfo) => [...prevInfo, res.data]);
   };
 
@@ -62,4 +66,4 @@ const Button = () => {
   );
 };
 
-export default Button;
+export default Bookmark;

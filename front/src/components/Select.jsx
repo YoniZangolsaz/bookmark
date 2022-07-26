@@ -6,7 +6,8 @@ import FormControl from '@mui/material/FormControl';
 
 const SelectList = ({ inputLabel, array, onChange, value, error }) => {
   return (
-    <FormControl required error={error} sx={{ m: 1, minWidth: 120 }}>
+    <FormControl   color="info"
+    error={error} sx={{ minWidth: 150, ml: 2 }}>
       <InputLabel>{inputLabel}</InputLabel>
       <Select
         value={value}
