@@ -1,5 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { Box, Paper, Typography, Grid, Button } from '@mui/material';
+import { Box, Paper, Typography, Grid, Tooltip } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 import { useNavigate } from 'react-router-dom';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -13,7 +14,14 @@ import Swal from 'sweetalert2';
 import Search from './Search';
 import SelectList from './Select';
 
-const useStyles = {
+const useStyles = makeStyles(() => ({
+  customWidth: {
+    letterSpacing: '0.1rem',
+    fontSize: '0.8em',
+  },
+}));
+
+const style = {
   box: {
     display: 'flex',
     flexWrap: 'wrap',
@@ -52,6 +60,7 @@ const useStyles = {
     margin: '0 0 22px 2px',
     letterSpacing: '1.5px',
     textTransform: 'capitalize',
+    cursor: 'help',
   },
   icon: {
     color: 'white',
@@ -69,10 +78,16 @@ const useStyles = {
     mr: 0.8,
     textTransform: 'capitalize',
   },
+  searchBox: {
+    display: 'flex',
+    flexDirection: 'row',
+    margin: '8px 8px 56px 24px',
+  },
 };
 
 const Pages = ({ pages, deletePage }) => {
   let navigate = useNavigate();
+  const classes = useStyles();
   const { setInfo } = useContext(InfoContext);
   const [open, setOpen] = useState(false);
   const [indexPage, setIndexPage] = useState();
@@ -80,6 +95,7 @@ const Pages = ({ pages, deletePage }) => {
   const [filter, setFilter] = useState('');
   const [tags, setTags] = useState([]);
   const [tagInput, setTagInput] = useState('');
+  const [pagesSearched, setPagesSearched] = useState(pages);
 
   const addBookmark = async (bookmark) => {
     try {
@@ -89,13 +105,13 @@ const Pages = ({ pages, deletePage }) => {
       );
       pages[indexPage].bookmarks.push(res.data);
       setInfo([...pages]);
+      console.log(pages);
     } catch {
       navigate('/bookmark');
     }
   };
 
-  const deleteBookmark = async (bookmark, pageObjectId, pageIndex) => {
-    console.log(bookmark);
+  const deleteBookmark = async (bookmark, pageIndex) => {
     const bookmarkId = bookmark._id;
     const swalRes = await Swal.fire({
       title: 'Are you sure you want to delete this bookmark?',
@@ -131,25 +147,15 @@ const Pages = ({ pages, deletePage }) => {
     setFilter(value);
   };
 
-  const filteredBookmarks = () => {
-    return pages.map((page) => {
-      return {
-        ...page,
-        bookmarks: page.bookmarks.filter(({ title }) =>
-          title.toLowerCase().startsWith(filter.toLowerCase())
-        ),
-      };
-    });
-  };
-
   useEffect(() => {
     const getUserTags = () => {
+      console.log(pages);
       const userTags = new Set();
       setTags(userTags);
       userTags.add('');
       for (let i = 0; i < pages.length; i++) {
         for (let j = 0; j < pages[i]?.bookmarks?.length; j++) {
-          for (let k = 0; k < pages[i].bookmarks[j].tags.length; k++) {
+          for (let k = 0; k < pages[i].bookmarks[j].tags?.length; k++) {
             userTags.add(pages[i].bookmarks[j].tags[k]);
           }
         }
@@ -157,6 +163,42 @@ const Pages = ({ pages, deletePage }) => {
     };
     getUserTags();
   }, []);
+
+  useEffect(() => {
+    !filter
+      ? setPagesSearched(pages)
+      : setPagesSearched((prevPages) =>
+          prevPages.map((page) => {
+            return {
+              ...page,
+              bookmarks: page.bookmarks.filter(({ title }) =>
+                title.toLowerCase().startsWith(filter.toLowerCase())
+              ),
+            };
+          })
+        );
+  }, [filter]);
+
+  useEffect(() => {
+    setPagesSearched(pages);
+  }, [pages]);
+
+  useEffect(() => {
+    !tagInput
+      ? setPagesSearched(pages)
+      : setPagesSearched(
+          () =>
+            pages.map((page) => {
+              return {
+                ...page,
+                bookmarks: page.bookmarks.filter(({ tags }) =>
+                  tags.includes(tagInput)
+                ),
+              };
+            })
+
+        );
+  }, [tagInput]);
 
   return (
     <Grid container>
@@ -167,14 +209,8 @@ const Pages = ({ pages, deletePage }) => {
           addBookmark={(bookmark) => addBookmark(bookmark)}
         />
       )}
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'row',
-          margin: '8px 0px 56px 24px',
-        }}
-      >
-        <Search sx={{ m: 1 }} setData={filterData} />
+      <Box sx={style.searchBox}>
+        <Search setData={filterData} />
         <SelectList
           array={tags}
           inputLabel={'Tags Filter'}
@@ -185,46 +221,56 @@ const Pages = ({ pages, deletePage }) => {
           }}
         />
       </Box>
-      <Box sx={useStyles.box}>
-        {filteredBookmarks()?.map((page, pageIndex) => (
+      <Box sx={style.box}>
+        {pagesSearched?.map((page, pageIndex) => (
           <Grid key={pageIndex}>
-            <Paper elevation={3} variant='elevation' sx={useStyles.paper}>
+            <Paper elevation={3} variant='elevation' sx={style.paper}>
               <Box sx={{ display: 'flex', backgroundColor: '#01579b' }}>
-                <Typography variant='h5' sx={useStyles.typographyHeader}>
+                <Typography variant='h5' sx={style.typographyHeader}>
                   {page.title}
                 </Typography>
                 <IconButton
                   sx={{ paddingRight: 0 }}
                   onClick={() => openAddBookmark(page._id, pageIndex)}
                 >
-                  <AddCircleOutlineIcon sx={useStyles.icon} />
+                  <AddCircleOutlineIcon sx={style.icon} />
                 </IconButton>
                 <IconButton onClick={() => deletePage(page._id)}>
-                  <DeleteIcon sx={useStyles.icon} />
+                  <DeleteIcon sx={style.icon} />
                 </IconButton>
               </Box>
-              <Box sx={useStyles.pages}>
+              <Box sx={style.pages}>
                 {page?.bookmarks?.map((bookmarks, i) => (
-                  <Box sx={useStyles.boxBookmark} key={i}>
+                  <Box sx={style.boxBookmark} key={i}>
                     <Avatar
-                      sx={useStyles.avatar}
+                      sx={style.avatar}
                       alt={bookmarks.url}
                       src={`${bookmarks.url}/favicon.ico`}
                     />
-                    <Typography key={i} sx={useStyles.bookmark}>
-                      {bookmarks?.title}
-                    </Typography>
-                    <IconButton
-                      size='small'
-                      onClick={() =>
-                        deleteBookmark(bookmarks, page._id, pageIndex)
-                      }
+                    <Tooltip
+                      key={i}
+                      placement='top-start'
+                      title={`Tags: ${bookmarks.tags}`}
+                      arrow
+                      classes={{ tooltip: classes.customWidth }}
                     >
-                      <DeleteIcon sx={{ color: 'red' }} />
-                    </IconButton>
-                    <IconButton size='small' href={bookmarks.url}>
-                      <ArrowCircleRightIcon sx={{ color: '#009688' }} />
-                    </IconButton>
+                      <Typography key={i} sx={style.bookmark}>
+                        {bookmarks?.title}
+                      </Typography>
+                    </Tooltip>
+                    <Tooltip placement='top-start' title='Delete' arrow>
+                      <IconButton
+                        size='small'
+                        onClick={() => deleteBookmark(bookmarks, pageIndex)}
+                      >
+                        <DeleteIcon sx={{ color: 'red' }} />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip placement='top-start' title='Go to website' arrow>
+                      <IconButton size='small' href={bookmarks.url}>
+                        <ArrowCircleRightIcon sx={{ color: '#009688' }} />
+                      </IconButton>
+                    </Tooltip>
                   </Box>
                 ))}
               </Box>

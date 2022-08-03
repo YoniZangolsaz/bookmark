@@ -1,13 +1,13 @@
 import React from 'react';
 import SearchIcon from '@mui/icons-material/Search';
-import { TextField, Container } from '@mui/material';
+import { TextField } from '@mui/material';
 import InputAdornment from '@mui/material/InputAdornment';
 
 const Search = ({ setData }) => {
   return (
     <TextField
       color='info'
-      placeholder='Search…'
+      placeholder='Search Bookmarks...'
       variant='outlined'
       InputProps={{
         startAdornment: (

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
@@ -6,14 +6,17 @@ import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
 import { clear, getObj } from '../utils/localStorage';
 import Link from '@mui/material/Link';
+import { InfoContext } from '../InfoContext';
 
 const NavBar = () => {
   let navigate = useNavigate();
+  const { setInfo } = useContext(InfoContext);
   const username = getObj('data')?.user?.username;
 
   const handleSignOutButton = () => {
     navigate('/');
     clear();
+    setInfo(null);
   };
 
   return (

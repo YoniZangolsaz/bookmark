@@ -5,13 +5,55 @@ import { InfoContext } from '../InfoContext';
 import Loading from '../components/Loading';
 import AddPage from '../components/AddPage';
 import axios from 'axios';
-import { getObj } from '../utils/localStorage';
+import { getObj, setObj } from '../utils/localStorage';
 import Swal from 'sweetalert2';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const Bookmark = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+
   const { info, setInfo } = useContext(InfoContext);
+
+  const loadPages = () => {
+    if (location.pathname !== '/signup') {
+      const localData = getObj('data');
+      if (!localData) {
+        navigate(`/`);
+      } else {
+        const userCheck = {
+          username: localData?.user.username,
+          password: localData?.user.password,
+        };
+        const checkUserExist = async () => {
+          try {
+            const res = await axios.post(
+              `${process.env.REACT_APP_BECKEND_URL}/users/userData`,
+              userCheck
+            );
+            if (!res.data) {
+              navigate(`/`);
+            } else {
+              const currentLocatin = location.pathname;
+              if (currentLocatin !== '/bookmark') {
+                navigate(`/bookmark`);
+              }
+              setInfo(res.data);
+              console.log(info);
+              setObj('data', { ...localData, data: res.data });
+            }
+          } catch (e) {
+            navigate(`/`);
+          }
+        };
+        checkUserExist();
+      }
+    }
+  };
+
+  useEffect(() => {
+    loadPages();
+  }, []);
 
 
   const deletePage = async (pageId) => {

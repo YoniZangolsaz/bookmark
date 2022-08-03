@@ -79,8 +79,7 @@ export const SignUp = () => {
     } else {
       try {
         delete user.confirm;
-        console.log(user);
-        const res = await axios.post(
+        await axios.post(
           `${process.env.REACT_APP_BECKEND_URL}/users/new`,
           {
             user,

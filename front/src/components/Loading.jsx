@@ -3,7 +3,12 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 const Loading = ({ variant }) => {
   return (
-    <CircularProgress sx={{ mb: 3 }} variant={variant} color='secondary' />
+    <CircularProgress
+      size={60}
+      sx={{ mb: 3 }}
+      variant={variant}
+      color='secondary'
+    />
   );
 };
 
