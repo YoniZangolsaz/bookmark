@@ -10,7 +10,6 @@
     "@mui/lab": "^5.0.0-alpha.74",
     "@mui/material": "^5.4.1",
     "@mui/styles": "^5.4.1",
-    "@teambit/community.ui.logo-showcase": "^1.95.15",
     "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
