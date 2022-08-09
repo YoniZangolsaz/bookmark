@@ -1,4 +1,4 @@
 # bookmark
 
-Run docker-compose up
-Go to port 3000
+Run docker-compose up and
+go to port 3000
